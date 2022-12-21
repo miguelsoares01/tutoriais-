@@ -1,0 +1,31 @@
+Mapeamento de Rede Linux usando FSTAB
+Aplicar comandos usando root. ( usar o comando su e senha de root )
+Se a máquina tiver mais de um usuário o processo deverá ser repetido para todos os usuários, para cada usuário deverá ser criada uma pasta em mnt 
+
+Usar o comando su e colocar senha de root para privilégios de administrador.
+0- Instalar cifs-utils : comando apt-get install cifs-utils
+1-  Criar pasta usando o comando mkdir  
+        1.1 Entrar na pasta usando o comando cd /mnt
+        1.2 Criar pasta dentro de mnt: mkdir  srv_sejus (pastas com nomes diferentes deverão ser criadas para usuários diferentes)
+2- Criar arquivo de credencial (um para cada usuário)
+        2.1 Acessar a pasta root com o comando cd /root
+        2.2 Criar arquivo usando o comando nano nomedousuario.txt com o seguinte conteúdo
+           username=usuário
+           password=senha
+        2.3 Para salvar apertar crtl + O  apertar enter para confirmar e depois para sair apertar crtl + X
+           
+3-Editar o arquivo /etc/fstab no Ubuntu12.04
+        3.1 Usar o comando nano /etc/fstab e inserir a linha
+           //172.18.4.24/sejus /mnt/srv_sejus cifs uid=usuariolocal,gid=usuariolocal,users,credentials=/root/nomedousuario.txt 0 0 
+        3.2 Para salvar apertar crtl + O  apertar enter para confirmar e depois para sair apertar crtl + X
+	3.3 Desmontar particao umount -av
+3.4 Depois montar novamente mount -av
+
+3.4.1 OBS: Para mapeamentos no Ubuntu 16.04 essa linha do fstab vai mudar um pouco://ip do servidor/pasta da rede /mnt/pasta criada no mnt cifs vers=1.0,uid=usuário local,gid=usuário local,credentials=/root/arquivo criado com as credenciais de rede do usuário.txt    0       0
+
+	3.5 Testar o acesso via modo gráfico  a pasta em sistema de arquivos mnt/srv_sejus e verificar se estão aparecendo os arquivos da rede.
+4- Criar link na Área de trabalho (a pastava srv_sejus é uma que pode ser usada, mais caso a máquina tiver mais de um usuário deverá ser usado vários nomes diferentes para as pastas)
+        4.1 Usar comando ln -s /mnt/srv_sejus /home/nomedousuario/Área\ de\ Trabalho/
+           OBS: Quando sejus é o nome do usuário local da máquina variando de acordo com cada usuário.
+
+
